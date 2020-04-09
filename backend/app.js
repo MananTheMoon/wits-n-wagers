@@ -11,6 +11,11 @@ const app = express()
 const path = require("path")
 // Serve static files from the React frontend app
 app.use(express.static(path.join(__dirname, "../frontend/build")))
+app.get("*", function (req, res) {
+  res.sendFile("index.html", {
+    root: path.join(__dirname, "../frontend/build"),
+  })
+})
 
 const server = http.createServer(app)
 
