@@ -29,3 +29,17 @@ export const setGameStateAsync = (dispatch: Dispatch) => async (
 ) => {
   socket.emit("setGameState", gameState)
 }
+
+export const setCamUrlAsync = (dispatch: Dispatch) => async (
+  camUrl: string,
+  socket: SocketIOClient.Socket
+) => {
+  socket.emit("setCamUrl", camUrl)
+}
+
+export const setQuestionAsync = (dispatch: Dispatch) => async (
+  question: string,
+  socket: SocketIOClient.Socket
+) => {
+  socket.emit("setQuestion", question)
+}

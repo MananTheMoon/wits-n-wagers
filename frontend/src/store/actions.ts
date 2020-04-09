@@ -14,7 +14,9 @@ export const setPlayerState = createAction("SET_PLAYER_STATE")<PlayerState>()
 
 export const setGameState = createAction("SET_GAME_STATE")<GameState>()
 
-export const setGameData = createAction("SET_GAME_DATA")<IGameData>()
+export const updateGameData = createAction("SET_GAME_DATA")<IGameData>()
+
+export const updateCamUrl = createAction("SET_CAM_URL")<string>()
 
 export type IActions =
   | ActionType<typeof addSocket>
@@ -22,4 +24,5 @@ export type IActions =
   | ActionType<typeof setCurrentPlayer>
   | ActionType<typeof removePlayer>
   | ActionType<typeof setPlayerState>
-  | ActionType<typeof setGameData>
+  | ActionType<typeof updateGameData>
+  | ActionType<typeof updateCamUrl>

@@ -36,7 +36,7 @@ function JoinUnconnected({
     })
   }, [socket, setPlayerState, dispatch])
 
-  if (playerState == PlayerState.Connected) {
+  if (playerState === PlayerState.Connected) {
     return (
       <p className="text-center mt-4">You are connected as: {currentPlayer}</p>
     )

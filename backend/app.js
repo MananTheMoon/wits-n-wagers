@@ -28,9 +28,11 @@ const io = socketIo(server)
 let interval
 
 let players = {}
+let camUrl = ""
 
 let gameData = {
   gameState: "UNSTARTED",
+  question: "",
   guesses: {
     //"devin":
   },
@@ -47,6 +49,7 @@ const sendGameData = async () => {
 io.on("connection", (socket) => {
   console.log("New client connected")
   socket.emit("listPlayers", players)
+  socket.emit("camUrl", camUrl)
   sendGameData()
 
   if (interval) {
@@ -69,6 +72,16 @@ io.on("connection", (socket) => {
 
   socket.on("setGameState", (gameState) => {
     gameData.gameState = gameState
+    sendGameData()
+  })
+
+  socket.on("setCamUrl", (inputCamUrl) => {
+    camUrl = inputCamUrl
+    io.emit("camUrl", camUrl)
+  })
+
+  socket.on("setQuestion", (question) => {
+    gameData.question = question
     sendGameData()
   })
 

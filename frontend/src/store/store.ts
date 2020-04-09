@@ -9,16 +9,19 @@ import {
   IActions,
   setPlayers,
   setPlayerState,
-  setGameData,
+  updateGameData,
+  updateCamUrl,
 } from "./actions"
 import { GameState, PlayerState } from "./gameState"
 import socketIOClient from "socket.io-client"
 
 // const server_url = "http://localhost:4001"
-const server_url = "https://wits-n-wagers.herokuapp.com/"
+const server_url = "http://localhost:5000"
+// const server_url = "https://wits-n-wagers.herokuapp.com/"
 
 export interface IGameData {
   gameState: GameState
+  question: string
   guesses: {
     [key: string]: number
   }
@@ -38,10 +41,12 @@ export interface IState {
   currentPlayer: string
   players: string[]
   gameData: IGameData
+  camUrl: string
 }
 
 const emptyStore = {
   gameData: {
+    question: "",
     gameState: GameState.Unstarted,
     guesses: {},
     buckets: {},
@@ -49,6 +54,7 @@ const emptyStore = {
   playerState: PlayerState.Unconnected,
   currentPlayer: "",
   players: [],
+  camUrl: "",
 }
 
 function game(state: IState = emptyStore, action: IActions) {
@@ -74,10 +80,15 @@ function game(state: IState = emptyStore, action: IActions) {
         ...state,
         playerState: action.payload,
       }
-    case getType(setGameData):
+    case getType(updateGameData):
       return {
         ...state,
         gameData: action.payload,
+      }
+    case getType(updateCamUrl):
+      return {
+        ...state,
+        camUrl: action.payload,
       }
     default:
       return state

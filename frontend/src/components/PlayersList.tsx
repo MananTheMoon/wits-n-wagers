@@ -1,7 +1,7 @@
 import React from "react"
 import { IState, Dispatch, IGameData } from "../store/store"
 import { connect, useDispatch } from "react-redux"
-import { setGameData } from "../store/actions"
+import { updateGameData, updateCamUrl } from "../store/actions"
 import classnames from "classnames"
 import { setPlayersSync, removePlayerAsync } from "../store/thunks"
 
@@ -29,7 +29,12 @@ export function PlayersListUnconnected({
     })
     socket?.on("gameData", (gameData: IGameData) => {
       console.log(gameData)
-      dispatch(setGameData(gameData))
+      dispatch(updateGameData(gameData))
+    })
+
+    socket?.on("camUrl", (camUrl: string) => {
+      console.log(camUrl)
+      dispatch(updateCamUrl(camUrl))
     })
   }, [currentPlayer, dispatch, setPlayers, socket])
 
