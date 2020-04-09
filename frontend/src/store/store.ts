@@ -14,7 +14,8 @@ import {
 import { GameState, PlayerState } from "./gameState"
 import socketIOClient from "socket.io-client"
 
-const server_url = "http://localhost:4001"
+// const server_url = "http://localhost:4001"
+const server_url = "https://wits-n-wagers.herokuapp.com/"
 
 export interface IGameData {
   gameState: GameState

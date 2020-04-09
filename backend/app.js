@@ -3,11 +3,15 @@ const http = require("http")
 const socketIo = require("socket.io")
 const axios = require("axios")
 
-const port = process.env.PORT || 4001
+const port = process.env.PORT || 5000
 const index = require("./routes/index")
 
 const app = express()
-app.use(index)
+// app.use(index)
+
+const path = require("path")
+// Serve static files from the React frontend app
+app.use(express.static(path.join(__dirname, "frontend/build")))
 
 const server = http.createServer(app)
 
