@@ -16,7 +16,6 @@ function BucketUnconnected({ socket, gameData }: IBucketProps) {
 
   React.useEffect(() => {
     socket?.on("gameData", (gameData: IGameData) => {
-      console.log(gameData)
       dispatch(updateGameData(gameData))
     })
   }, [dispatch, socket])

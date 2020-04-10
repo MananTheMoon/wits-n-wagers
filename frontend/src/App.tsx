@@ -10,6 +10,7 @@ import { createStore } from "./store/store"
 import { Home } from "./pages/Home"
 import { Admin } from "./pages/Admin"
 import { Bucket } from "./pages/Bucket"
+import { Money } from "./pages/Money"
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route exact path="/" component={Home} />
         <Route exact path="/admin" component={Admin} />
         <Route exact path="/bucket/:index" component={Bucket} />
+        <Route exact path="/money" component={Money} />
       </Switch>
     </Provider>
   )
