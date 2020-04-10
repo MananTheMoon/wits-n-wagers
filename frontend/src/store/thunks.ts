@@ -46,6 +46,14 @@ export const setQuestionAsync = (dispatch: Dispatch) => async (
   socket.emit("setQuestion", question)
 }
 
+export const setMoneyAsync = (dispatch: Dispatch) => async (
+  player: string,
+  money: number,
+  socket: SocketIOClient.Socket
+) => {
+  socket.emit("setMoney", player, money)
+}
+
 export const setGuessAsync = (dispatch: Dispatch) => async (
   player: string,
   guess: number,

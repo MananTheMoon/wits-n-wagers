@@ -31,10 +31,13 @@ let gameData = {
   gameState: "UNSTARTED",
   question: "",
   guesses: {
-    //"devin":
+    //[player]: number
   },
   buckets: {
     // 0: { guessers: ["devin", "manan"], value: "32", bids: {"devin": 50, "robert": 35}}
+  },
+  money: {
+    // [player]: number
   },
 }
 
@@ -56,7 +59,10 @@ io.on("connection", (socket) => {
   socket.on("addPlayer", (name) => {
     players = { ...players, [name]: socket.id }
     console.log(players)
-    console.log("....")
+    if (!gameData.money[name]) {
+      gameData.money[name] = 200
+      sendGameData()
+    }
     io.emit("listPlayers", players)
   })
 
@@ -117,6 +123,14 @@ io.on("connection", (socket) => {
 
   socket.on("setQuestion", (question) => {
     gameData.question = question
+    sendGameData()
+  })
+
+  socket.on("setMoney", (player, money) => {
+    gameData.money[player] = money
+    if (money == 0) {
+      delete gameData.money[player]
+    }
     sendGameData()
   })
 

@@ -36,6 +36,9 @@ export interface IGameData {
       }
     }
   }
+  money: {
+    [key: string]: number
+  }
 }
 
 export interface IState {
@@ -53,6 +56,7 @@ const emptyStore = {
     gameState: GameState.Unstarted,
     guesses: {},
     buckets: {},
+    money: {},
   },
   playerState: PlayerState.Unconnected,
   currentPlayer: "",

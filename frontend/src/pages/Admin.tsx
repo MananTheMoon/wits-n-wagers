@@ -3,8 +3,8 @@ import { connect } from "react-redux"
 import { IState, Dispatch, IGameData } from "../store/store"
 import {
   setGameStateAsync,
-  setCamUrlAsync,
   setQuestionAsync,
+  setMoneyAsync,
 } from "../store/thunks"
 import { PlayersList } from "../components/PlayersList"
 import { GameState } from "../store/gameState"
@@ -12,26 +12,24 @@ import { GameState } from "../store/gameState"
 interface IAdminProps {
   socket?: SocketIOClient.Socket
   gameData: IGameData
-  camUrl: string
   removePlayer: (name: string, socket: SocketIOClient.Socket) => void
   setGameState: (gameState: GameState, socket: SocketIOClient.Socket) => void
-  setCamUrl: (camUrl: string, socket: SocketIOClient.Socket) => void
   setQuestion: (question: string, socket: SocketIOClient.Socket) => void
+  setMoney: (
+    player: string,
+    money: number,
+    socket: SocketIOClient.Socket
+  ) => void
 }
 
-export function AdminUnconnected({
+function AdminUnconnected({
   socket,
   gameData,
-  camUrl,
   setGameState,
-  setCamUrl,
   setQuestion,
+  setMoney,
 }: IAdminProps) {
-  const [urlInput, setUrlInput] = React.useState(camUrl)
   const [questionInput, setQuestionInput] = React.useState(gameData.question)
-  React.useEffect(() => {
-    setUrlInput(camUrl)
-  }, [setUrlInput, camUrl])
   return (
     <div className="p-2">
       <p className="text-center h2">Admin Page</p>
@@ -57,7 +55,7 @@ export function AdminUnconnected({
       </div>
       <PlayersList admin={true} />
 
-      <div className="d-flex flex-row justify-content-start">
+      <div className="d-flex flex-row justify-content-start mt-2">
         <input
           type="text"
           placeholder="Question"
@@ -72,21 +70,53 @@ export function AdminUnconnected({
         </button>
         <div>Current Question: {gameData.question}</div>
       </div>
+      <hr />
+      <MoneyEditor gameData={gameData} socket={socket} setMoney={setMoney} />
+    </div>
+  )
+}
 
-      <div className="d-flex flex-row justify-content-start">
-        <input
-          type="text"
-          placeholder="IP Cam Address"
-          className="mr-2"
-          value={urlInput}
-          onChange={(e) => {
-            setUrlInput(e.target.value)
-          }}
-        ></input>
-        <button onClick={() => socket && setCamUrl(urlInput, socket)}>
-          Set URL
-        </button>
-      </div>
+interface IMoneyEditorProps {
+  socket?: SocketIOClient.Socket
+  gameData: IGameData
+  setMoney: (
+    player: string,
+    money: number,
+    socket: SocketIOClient.Socket
+  ) => void
+}
+
+function MoneyEditor({ socket, gameData, setMoney }: IMoneyEditorProps) {
+  const [moneyInput, setMoneyInput] = React.useState("")
+  return (
+    <div>
+      <div className="h4">Money Edit</div>
+      {Object.keys(gameData.money).map((player) => {
+        return (
+          <div className="d-flex flex-row justify-content-start align-items-center">
+            <div className="mr-2">
+              {player}: ${gameData.money[player]}
+            </div>
+            <input
+              type="number"
+              value={moneyInput}
+              onChange={(e) => {
+                const value = Number(e.target.value)
+                if (!isNaN(value)) {
+                  setMoneyInput(e.target.value)
+                }
+              }}
+            />
+            <button
+              onClick={() => {
+                socket && setMoney(player, Number(moneyInput), socket)
+              }}
+            >
+              Update
+            </button>
+          </div>
+        )
+      })}
     </div>
   )
 }
@@ -95,14 +125,13 @@ const mapStateToProps = (state: IState) => ({
   socket: state.socket,
   gameData: state.gameData,
   players: state.players,
-  camUrl: state.camUrl,
 })
 
 const mapDispatchToProps = (dispatch: Dispatch) => {
   return {
     setGameState: setGameStateAsync(dispatch),
-    setCamUrl: setCamUrlAsync(dispatch),
     setQuestion: setQuestionAsync(dispatch),
+    setMoney: setMoneyAsync(dispatch),
   }
 }
 

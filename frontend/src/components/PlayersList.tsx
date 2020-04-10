@@ -51,6 +51,7 @@ export function PlayersListUnconnected({
           if (gameData.gameState === GameState.Guessing) {
             showCheckmark = Object.keys(gameData.guesses).includes(player)
           }
+          // TODO - Show checkmark logic on bidding state
 
           return (
             <div
@@ -64,7 +65,7 @@ export function PlayersListUnconnected({
                 })}
               >
                 <div>
-                  {player}
+                  {player} (${gameData.money[player]})
                   {showCheckmark && <span className="ml-2">✅</span>}
                 </div>
               </div>
