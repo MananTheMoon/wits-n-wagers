@@ -4,6 +4,7 @@ import { PlayerState } from "../store/gameState"
 import { connect } from "react-redux"
 import "./Guessing.css"
 import { setGuessAsync } from "../store/thunks"
+import { numberWithCommas, numberWithoutCommas } from "../utils/formatNumber"
 
 interface IGuessingProps {
   socket?: SocketIOClient.Socket
@@ -12,7 +13,7 @@ interface IGuessingProps {
   currentPlayer: string
   setGuess: (
     player: string,
-    guess: string,
+    guess: number,
     socket: SocketIOClient.Socket
   ) => void
 }
@@ -36,23 +37,26 @@ function GuessingUnconnected({
       <div className="h5 text-center mt-3">Make Your Guess</div>
       <div className="d-flex flex-row mt-1 justify-content-center align-items-center guess">
         <input
-          type="number"
-          min={0}
-          max={1000000000}
+          type="text"
+          // min={0}
+          // max={1000000000}
+          inputMode="decimal"
           placeholder={"Your Guess"}
           value={input}
           className="mr-2"
           onChange={(e) => {
-            const value = Number(e.target.value)
-            if (!isNaN(value)) {
-              setInput(e.target.value)
+            const value = numberWithoutCommas(e.target.value)
+            const decimal = e.target.value.endsWith(".") ? "." : ""
+            if (!isNaN(value) && value !== 0) {
+              setInput(`${numberWithCommas(value)}${decimal}`)
             }
           }}
         />
         <button
           className="btn btn-primary"
           onClick={() => {
-            socket && setGuess(currentPlayer, input, socket)
+            socket &&
+              setGuess(currentPlayer, numberWithoutCommas(input), socket)
           }}
         >
           Submit

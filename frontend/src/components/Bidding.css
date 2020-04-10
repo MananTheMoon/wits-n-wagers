@@ -7,10 +7,34 @@
 .bid-panel {
   border-radius: 0.25rem;
   border: 1px solid;
+  min-height: 70px;
 }
 
 .bid-guess {
   font-weight: bold;
   font-size: 24px;
   font-family: "Patrick Hand", cursive;
+}
+
+.bid-money input {
+  width: 20px;
+  height: 20px;
+}
+
+.bid-amount {
+  height: 100px;
+  width: 100px;
+  margin-top: -50px;
+  border: solid;
+  border-radius: 100%;
+  background: white;
+  margin-left: 20px;
+}
+
+.change-bid {
+  font-weight: bold;
+  font-size: 20px;
+  color: blue;
+  cursor: pointer;
+  padding: 2px 6px;
 }

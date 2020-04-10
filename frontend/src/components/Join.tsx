@@ -23,8 +23,16 @@ function JoinUnconnected({
   addPlayer,
   removePlayer,
 }: IJoinProps) {
-  const [name, setName] = React.useState("")
+  const [name, setName] = React.useState(window.localStorage.name || "")
   const [canJoin, setCanJoin] = React.useState(false)
+
+  React.useEffect(() => {
+    if (name && !players.includes(name)) {
+      setCanJoin(true)
+    } else {
+      setCanJoin(false)
+    }
+  }, [name, players])
 
   const dispatch = useDispatch()
 
@@ -52,11 +60,6 @@ function JoinUnconnected({
           onChange={(e) => {
             const value = e.target.value.replace(/ /g, "")
             setName(value)
-            if (value && !players.includes(value)) {
-              setCanJoin(true)
-            } else {
-              setCanJoin(false)
-            }
           }}
         />
         <button

@@ -2,6 +2,7 @@ import React from "react"
 import { IGameData, IState } from "../store/store"
 import { connect } from "react-redux"
 import { PlayerState } from "../store/gameState"
+import { numberWithCommas } from "../utils/formatNumber"
 import "./Bidding.css"
 
 interface IBidSpot {
@@ -13,23 +14,73 @@ interface IBidSpot {
       [key: string]: number
     }
   }
+  checkmarkDisabled?: boolean
+  currentBid?: number
+  onToggleCheck: (checked: boolean) => void
+  onChangeBid: (newBidAmount: number) => void
 }
 
-function BidSpot({ bucket }: IBidSpot) {
+function BidSpot({
+  bucket,
+  checkmarkDisabled,
+  onToggleCheck,
+  currentBid,
+  onChangeBid,
+}: IBidSpot) {
   return (
     <div className="border bid-spot m-3 p-2 d-flex flex-column align-items-center">
       <div className="font-weight-bold">Pays {bucket.payout} to 1</div>
+
       {bucket.value !== null && (
-        <div className="bg-white p-2 bid-panel w-25">
-          {bucket.guessers.map((name, i) => {
-            return (
-              <span>
-                {i > 0 ? " / " : ""}
-                {name}
+        <div className="d-flex flex-row justify-content-center align-items-center">
+          <div>
+            <div className="bg-white p-2 bid-panel">
+              {bucket.guessers.map((name, i) => {
+                return (
+                  <span>
+                    {i > 0 ? " / " : ""}
+                    {name}
+                  </span>
+                )
+              })}
+              <div className="bid-guess">
+                {bucket.value === 0
+                  ? "Smaller than lowest"
+                  : numberWithCommas(bucket.value)}
+              </div>
+            </div>
+          </div>
+          <div className="ml-2 bid-money">
+            <input
+              type="checkbox"
+              checked={!!currentBid}
+              disabled={checkmarkDisabled && !currentBid}
+              onChange={() => {
+                onToggleCheck(!currentBid)
+              }}
+            />
+            {currentBid && (
+              <span className="position-absolute bid-amount">
+                <div className="bid-amount-inner d-flex align-items-center justify-content-center h-100 flex-column">
+                  <div
+                    className="change-bid"
+                    onClick={() => onChangeBid(currentBid + 100)}
+                  >
+                    +
+                  </div>
+                  <div>${currentBid}</div>
+                  <div
+                    className="change-bid"
+                    onClick={() =>
+                      onChangeBid(currentBid > 100 ? currentBid - 100 : 100)
+                    }
+                  >
+                    -
+                  </div>
+                </div>
               </span>
-            )
-          })}
-          <div className="bid-guess">{bucket.value}</div>
+            )}
+          </div>
         </div>
       )}
     </div>
@@ -44,12 +95,21 @@ interface IBiddingProps {
   currentPlayer: string
 }
 
+// myBids = {bucket: 400, other_bucket_index: 50}
+
+interface IBids {
+  [key: string]: number
+}
 function BiddingUnconnected({
   socket,
   gameData,
   playerState,
   currentPlayer,
 }: IBiddingProps) {
+  const [bids, setBids] = React.useState<IBids>({})
+  React.useEffect(() => {
+    console.log(bids)
+  }, [bids])
   if (playerState !== PlayerState.Connected || !currentPlayer) {
     return <div className="mt-2 text-center">You must join to participate</div>
   }
@@ -61,10 +121,37 @@ function BiddingUnconnected({
         rel="stylesheet"
       ></link>
       <div className="h5 text-center mt-3">Make Your Bids</div>
-      {Object.keys(gameData.buckets).map((key) => {
+      {Object.keys(gameData.buckets).map((key, i) => {
         const bucket = gameData.buckets[Number(key)]
 
-        return <BidSpot bucket={bucket} />
+        return (
+          <BidSpot
+            bucket={bucket}
+            key={i}
+            // checked={Object.keys(bids).includes(String(i))}
+            currentBid={bids[String(i)]}
+            onToggleCheck={(checked) => {
+              if (checked && Object.keys(bids).length < 2) {
+                setBids({
+                  ...bids,
+                  [i]: 100,
+                })
+              }
+              if (!checked) {
+                const newBids = Object.assign({}, bids)
+                delete newBids[i]
+                setBids(newBids)
+              }
+            }}
+            onChangeBid={(newBidAmount) => {
+              setBids({
+                ...bids,
+                [i]: newBidAmount,
+              })
+            }}
+            checkmarkDisabled={Object.keys(bids).length >= 2}
+          />
+        )
       })}
     </>
   )

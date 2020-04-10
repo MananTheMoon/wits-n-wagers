@@ -8,6 +8,7 @@ export const setCurrentPlayerAsync = (dispatch: Dispatch) => async (
 ) => {
   dispatch(setCurrentPlayer(name))
   socket.emit("addPlayer", name)
+  window.localStorage.name = name
   // TODO (Manan) - Add player name to local storage
 }
 
@@ -46,8 +47,8 @@ export const setQuestionAsync = (dispatch: Dispatch) => async (
 
 export const setGuessAsync = (dispatch: Dispatch) => async (
   player: string,
-  guess: string,
+  guess: number,
   socket: SocketIOClient.Socket
 ) => {
-  socket.emit("setGuess", { [player]: Number(guess) })
+  socket.emit("setGuess", { [player]: guess })
 }
