@@ -75,9 +75,9 @@ io.on("connection", (socket) => {
     }
     if (gameState == "BIDDING") {
       gameData.buckets = {}
-      const unique_guesses = [
-        ...new Set(Object.values(gameData.guesses)),
-      ].sort()
+      const unique_guesses = [...new Set(Object.values(gameData.guesses))].sort(
+        (a, b) => a - b
+      )
 
       // Number of blank buckets to pad on either side
       guesses_padding = Math.floor((7 - unique_guesses.length) / 2)
