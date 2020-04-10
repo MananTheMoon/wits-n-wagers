@@ -49,6 +49,8 @@ function GuessingUnconnected({
             const decimal = e.target.value.endsWith(".") ? "." : ""
             if (!isNaN(value) && value !== 0) {
               setInput(`${numberWithCommas(value)}${decimal}`)
+            } else if (e.target.value === "") {
+              setInput(e.target.value)
             }
           }}
         />
