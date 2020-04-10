@@ -128,9 +128,12 @@ io.on("connection", (socket) => {
 
   socket.on("setMoney", (player, money) => {
     gameData.money[player] = money
-    if (money == 0) {
-      delete gameData.money[player]
-    }
+    sendGameData()
+  })
+
+  socket.on("removePlayerFromGameData", (player) => {
+    delete gameData.money[player]
+    delete gameData.guesses[player]
     sendGameData()
   })
 

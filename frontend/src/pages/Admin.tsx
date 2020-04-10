@@ -71,7 +71,7 @@ function AdminUnconnected({
         <div>Current Question: {gameData.question}</div>
       </div>
       <hr />
-      <MoneyEditor gameData={gameData} socket={socket} setMoney={setMoney} />
+      <MoneyEditors gameData={gameData} socket={socket} setMoney={setMoney} />
     </div>
   )
 }
@@ -86,37 +86,116 @@ interface IMoneyEditorProps {
   ) => void
 }
 
-function MoneyEditor({ socket, gameData, setMoney }: IMoneyEditorProps) {
+function MoneyEditors({ socket, gameData, setMoney }: IMoneyEditorProps) {
   const [moneyInput, setMoneyInput] = React.useState("")
   return (
     <div>
       <div className="h4">Money Edit</div>
       {Object.keys(gameData.money).map((player) => {
         return (
-          <div className="d-flex flex-row justify-content-start align-items-center">
-            <div className="mr-2">
-              {player}: ${gameData.money[player]}
-            </div>
-            <input
-              type="number"
-              value={moneyInput}
-              onChange={(e) => {
-                const value = Number(e.target.value)
-                if (!isNaN(value)) {
-                  setMoneyInput(e.target.value)
-                }
-              }}
-            />
-            <button
-              onClick={() => {
-                socket && setMoney(player, Number(moneyInput), socket)
-              }}
-            >
-              Update
-            </button>
-          </div>
+          <MoneyEditor
+            gameData={gameData}
+            socket={socket}
+            setMoney={setMoney}
+            player={player}
+          />
         )
+        // return (
+        //   <div className="d-flex flex-row justify-content-start align-items-center">
+        //     <div className="mr-2">
+        //       {player}: ${gameData.money[player]}
+        //     </div>
+        //     <input
+        //       type="number"
+        //       value={moneyInput}
+        //       onChange={(e) => {
+        //         const value = Number(e.target.value)
+        //         if (!isNaN(value)) {
+        //           setMoneyInput(e.target.value)
+        //         }
+        //       }}
+        //     />
+        //     <button
+        //       onClick={() => {
+        //         socket && setMoney(player, Number(moneyInput), socket)
+        //       }}
+        //     >
+        //       Update
+        //     </button>
+        //   </div>
+        // )
       })}
+    </div>
+  )
+}
+
+function MoneyEditor({
+  socket,
+  gameData,
+  player,
+  setMoney,
+}: {
+  socket?: SocketIOClient.Socket
+  gameData: IGameData
+  player: string
+  setMoney: (
+    player: string,
+    money: number,
+    socket: SocketIOClient.Socket
+  ) => void
+}) {
+  const [moneyInput, setMoneyInput] = React.useState("")
+  const playerMoney = gameData.money[player]
+  return (
+    <div className="d-flex flex-row justify-content-start align-items-center p-1">
+      <div className="mr-2">
+        {player}: ${playerMoney}
+      </div>
+      <input
+        type="number"
+        className="mr-2"
+        value={moneyInput}
+        onChange={(e) => {
+          const value = Number(e.target.value)
+          if (!isNaN(value)) {
+            setMoneyInput(e.target.value)
+          }
+        }}
+      />
+      <button
+        className="mr-2"
+        onClick={() => {
+          socket && setMoney(player, playerMoney + Number(moneyInput), socket)
+        }}
+      >
+        Add
+      </button>
+
+      <button
+        className="mr-2"
+        onClick={() => {
+          socket && setMoney(player, playerMoney - Number(moneyInput), socket)
+        }}
+      >
+        Subtract
+      </button>
+
+      <button
+        className="mr-2"
+        onClick={() => {
+          socket && setMoney(player, Number(moneyInput), socket)
+        }}
+      >
+        Update
+      </button>
+      <button
+        className="btn btn-danger btn-sm"
+        onClick={() => {
+          socket && socket.emit("removePlayerFromGameData", player)
+        }}
+      >
+        X
+      </button>
     </div>
   )
 }

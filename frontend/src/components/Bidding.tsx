@@ -33,7 +33,7 @@ function BidSpot({
       <div className="font-weight-bold">Pays {bucket.payout} to 1</div>
 
       {bucket.value !== null && (
-        <div className="d-flex flex-row justify-content-center align-items-center">
+        <div className="d-flex flex-row justify-content-between align-items-center p-1">
           <div>
             <div className="bg-white p-2 bid-panel">
               {bucket.guessers.map((name, i) => {
@@ -60,8 +60,10 @@ function BidSpot({
                 onToggleCheck(!currentBid)
               }}
             />
-            {currentBid && (
-              <span className="position-absolute bid-amount">
+          </div>
+          {currentBid && (
+            <div>
+              <div className="bid-amount">
                 <div className="bid-amount-inner d-flex align-items-center justify-content-center h-100 flex-column">
                   <div
                     className="change-bid"
@@ -79,9 +81,9 @@ function BidSpot({
                     -
                   </div>
                 </div>
-              </span>
-            )}
-          </div>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>
