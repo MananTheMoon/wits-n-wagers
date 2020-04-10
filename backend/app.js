@@ -151,6 +151,10 @@ io.on("connection", (socket) => {
           ...gameData.buckets[key].bids,
           [player]: bid,
         }
+      } else {
+        if (gameData.buckets[key].bids) {
+          delete gameData.buckets[key].bids[player]
+        }
       }
     })
     sendGameData()

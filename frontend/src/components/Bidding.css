@@ -4,10 +4,11 @@
   border-radius: 0.25rem;
 }
 
-.bid-panel {
+.guess-panel {
   border-radius: 0.25rem;
   border: 1px solid;
   min-height: 70px;
+  min-width: 100px;
 }
 
 .bid-guess {
@@ -38,4 +39,17 @@
   color: blue;
   cursor: pointer;
   padding: 2px 6px;
+}
+
+.bids-list-container .h5 {
+  background-color: #3c7b0d;
+  text-shadow: 0 0 4px black;
+}
+
+.bid-token {
+  border: solid 1px black;
+  border-radius: 100%;
+  width: 80px;
+  height: 80px;
+  background-color: #9e9a15;
 }

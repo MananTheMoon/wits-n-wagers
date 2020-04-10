@@ -8,6 +8,8 @@ import {
 } from "../store/thunks"
 import { PlayersList } from "../components/PlayersList"
 import { GameState } from "../store/gameState"
+import { BidSpot } from "../components/Bidding"
+import "../components/Bidding.css"
 
 interface IAdminProps {
   socket?: SocketIOClient.Socket
@@ -71,7 +73,10 @@ function AdminUnconnected({
         <div>Current Question: {gameData.question}</div>
       </div>
       <hr />
-      <MoneyEditors gameData={gameData} socket={socket} setMoney={setMoney} />
+      <div className="d-flex flex-row">
+        <MoneyEditors gameData={gameData} socket={socket} setMoney={setMoney} />
+        <AdminBidSpots gameData={gameData} />
+      </div>
     </div>
   )
 }
@@ -87,10 +92,9 @@ interface IMoneyEditorProps {
 }
 
 function MoneyEditors({ socket, gameData, setMoney }: IMoneyEditorProps) {
-  const [moneyInput, setMoneyInput] = React.useState("")
   return (
     <div>
-      <div className="h4">Money Edit</div>
+      <div className="h4 text-center">Money Edit</div>
       {Object.keys(gameData.money).map((player) => {
         return (
           <MoneyEditor
@@ -100,30 +104,6 @@ function MoneyEditors({ socket, gameData, setMoney }: IMoneyEditorProps) {
             player={player}
           />
         )
-        // return (
-        //   <div className="d-flex flex-row justify-content-start align-items-center">
-        //     <div className="mr-2">
-        //       {player}: ${gameData.money[player]}
-        //     </div>
-        //     <input
-        //       type="number"
-        //       value={moneyInput}
-        //       onChange={(e) => {
-        //         const value = Number(e.target.value)
-        //         if (!isNaN(value)) {
-        //           setMoneyInput(e.target.value)
-        //         }
-        //       }}
-        //     />
-        //     <button
-        //       onClick={() => {
-        //         socket && setMoney(player, Number(moneyInput), socket)
-        //       }}
-        //     >
-        //       Update
-        //     </button>
-        //   </div>
-        // )
       })}
     </div>
   )
@@ -197,6 +177,22 @@ function MoneyEditor({
         X
       </button>
     </div>
+  )
+}
+
+function AdminBidSpots({ gameData }: { gameData: IGameData }) {
+  return (
+    <>
+      {gameData.gameState === GameState.Bidding && (
+        <div className="d-flex flex-column">
+          <div className="h4 text-center">Bids</div>
+          {Object.keys(gameData.buckets).map((key, i) => {
+            const bucket = gameData.buckets[Number(key)]
+            return <BidSpot bucket={bucket} key={i} showAllBids={true} />
+          })}
+        </div>
+      )}
+    </>
   )
 }
 

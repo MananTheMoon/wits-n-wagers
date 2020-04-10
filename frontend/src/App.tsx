@@ -9,13 +9,19 @@ import { createStore } from "./store/store"
 
 import { Home } from "./pages/Home"
 import { Admin } from "./pages/Admin"
+import { Bucket } from "./pages/Bucket"
 
 function App() {
   return (
     <Provider store={createStore()}>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap"
+        rel="stylesheet"
+      ></link>
       <Switch>
         <Route exact path="/" component={Home} />
         <Route exact path="/admin" component={Admin} />
+        <Route exact path="/bucket/:index" component={Bucket} />
       </Switch>
     </Provider>
   )
