@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom"
 import { connect, useDispatch } from "react-redux"
 import { IState, IGameData } from "../store/store"
 import { updateGameData } from "../store/actions"
+import { GuessPanel, ListOfBids } from "../components/Bidding"
 
 interface IBucketProps {
   socket?: SocketIOClient.Socket
@@ -21,8 +22,18 @@ function BucketUnconnected({ socket, gameData }: IBucketProps) {
   }, [dispatch, socket])
 
   const bucket = gameData.buckets[Number(index)]
-  console.log(bucket)
-  return <div></div>
+  return (
+    <div className="p-3 text-center">
+      {bucket && bucket.value !== null ? (
+        <>
+          <GuessPanel bucket={bucket} />
+          <ListOfBids bucket={bucket} />
+        </>
+      ) : (
+        <div>...</div>
+      )}
+    </div>
+  )
 }
 
 const mapStateToProps = (state: IState) => ({

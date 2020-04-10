@@ -159,7 +159,6 @@ function BiddingUnconnected({
           Object.keys(gameData.buckets).reduce<IBids>((acc: IBids, key) => {
             const bucket = gameData.buckets[Number(key)]
             if (Object.keys(bucket.bids).includes(currentPlayer)) {
-              console.log("yeppers")
               return {
                 ...acc,
                 [String(key)]: bucket.bids[currentPlayer],
@@ -173,8 +172,6 @@ function BiddingUnconnected({
     }
   }, [initializedBids, gameData, currentPlayer])
   React.useEffect(() => {
-    console.log("Updating Bids")
-    console.log(bids)
     socket && setMyBids(currentPlayer, bids, socket)
   }, [bids, setMyBids])
   if (playerState !== PlayerState.Connected || !currentPlayer) {
