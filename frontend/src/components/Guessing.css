@@ -1,0 +1,12 @@
+.guess {
+  text-align: center;
+}
+
+.guess input {
+  font-size: 24px;
+  text-align: center;
+}
+
+.guess input::placeholder {
+  font-size: 16px;
+}

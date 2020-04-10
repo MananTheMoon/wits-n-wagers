@@ -43,3 +43,11 @@ export const setQuestionAsync = (dispatch: Dispatch) => async (
 ) => {
   socket.emit("setQuestion", question)
 }
+
+export const setGuessAsync = (dispatch: Dispatch) => async (
+  player: string,
+  guess: string,
+  socket: SocketIOClient.Socket
+) => {
+  socket.emit("setGuess", { [player]: Number(guess) })
+}

@@ -21,7 +21,7 @@ function QuestionUnconnected({ camUrl, question }: IQuestionProps) {
         </div>
       )}
       {question && (
-        <div className="w-50 question-badge p-3">Question: {question}</div>
+        <div className="w-75 question-badge p-3">Question: {question}</div>
       )}
     </div>
   )

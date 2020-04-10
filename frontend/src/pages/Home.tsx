@@ -6,6 +6,7 @@ import { PlayersList } from "../components/PlayersList"
 import { Question } from "../components/Question"
 import { Join } from "../components/Join"
 import { GameState } from "../store/gameState"
+import { Guessing } from "../components/Guessing"
 
 interface IHomeProps {
   gameData: IGameData
@@ -18,7 +19,8 @@ export function HomeUnconnected({ gameData }: IHomeProps) {
       <Join />
       <hr />
       {gameData.question && <Question />}
-      {gameData.gameState === GameState.Guessing && <div>GuessTime</div>}
+      {gameData.gameState === GameState.Guessing && <Guessing />}
+      <hr />
       <PlayersList />
     </section>
   )

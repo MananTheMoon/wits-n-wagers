@@ -21,10 +21,6 @@ const server = http.createServer(app)
 
 const io = socketIo(server)
 
-// const getApiAndEmit = async (socket) => {
-//   socket.emit("FromAPI", "Howdy")
-// }
-
 let interval
 
 let players = {}
@@ -37,7 +33,7 @@ let gameData = {
     //"devin":
   },
   buckets: {
-    // 1: { guess_key: "devin", bids: {"devin": 50, "robert": 35}}
+    // 0: { guessers: ["devin", "manan"], value: "32", bids: {"devin": 50, "robert": 35}}
   },
 }
 
@@ -72,6 +68,43 @@ io.on("connection", (socket) => {
 
   socket.on("setGameState", (gameState) => {
     gameData.gameState = gameState
+    if (gameState == "UNSTARTED") {
+      gameData.guesses = {}
+      gameData.buckets = {}
+    }
+    if (gameState == "BIDDING") {
+      gameData.buckets = {}
+      const unique_guesses = [
+        ...new Set(Object.values(gameData.guesses)),
+      ].sort()
+
+      // Number of blank buckets to pad on either side
+      guesses_padding = Math.floor((7 - unique_guesses.length) / 2)
+      console.log(unique_guesses)
+      for (let i = 0; i < guesses_padding; i++) {
+        unique_guesses.push(null)
+        unique_guesses.unshift(null)
+      }
+      if (unique_guesses.length < 7) {
+        unique_guesses.splice(3, 0, null)
+      }
+      console.log(unique_guesses)
+      for (let i = 0; i < 7; i++) {
+        let bucket = {
+          guessers: [],
+          value: unique_guesses[i],
+          bids: {},
+        }
+        Object.keys(players).forEach((player) => {
+          if (gameData.guesses[player] === unique_guesses[i]) {
+            bucket.guessers = [...bucket.guessers, player]
+          }
+        })
+
+        gameData.buckets[i] = bucket
+      }
+      console.log(gameData.buckets)
+    }
     sendGameData()
   })
 
@@ -82,6 +115,12 @@ io.on("connection", (socket) => {
 
   socket.on("setQuestion", (question) => {
     gameData.question = question
+    sendGameData()
+  })
+
+  socket.on("setGuess", (playerGuess) => {
+    gameData.guesses = { ...gameData.guesses, ...playerGuess }
+    console.log(gameData.guesses)
     sendGameData()
   })
 

@@ -15,7 +15,6 @@ import {
 import { GameState, PlayerState } from "./gameState"
 import socketIOClient from "socket.io-client"
 
-// const server_url = "http://localhost:4001"
 // const server_url = "http://localhost:5000"
 // const server_url = "https://wits-n-wagers.herokuapp.com/"
 const server_url =
@@ -29,7 +28,7 @@ export interface IGameData {
   }
   buckets: {
     [key: number]: {
-      guess_key: string
+      guessers: string[]
       bids: {
         [key: string]: number
       }
