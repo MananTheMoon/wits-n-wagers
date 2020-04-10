@@ -29,12 +29,10 @@ function JoinUnconnected({
   const dispatch = useDispatch()
 
   React.useEffect(() => {
-    console.log("Setting up removeYourself")
     socket?.on("removeYourself", () => {
-      console.log("Got Here")
       dispatch(setPlayerState(PlayerState.Unconnected))
     })
-  }, [socket, setPlayerState, dispatch])
+  }, [socket, dispatch])
 
   if (playerState === PlayerState.Connected) {
     return (

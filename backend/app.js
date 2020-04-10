@@ -25,6 +25,7 @@ let interval
 
 let players = {}
 let camUrl = ""
+const payouts = [6, 5, 4, 3, 2, 3, 4, 5]
 
 let gameData = {
   gameState: "UNSTARTED",
@@ -80,7 +81,6 @@ io.on("connection", (socket) => {
 
       // Number of blank buckets to pad on either side
       guesses_padding = Math.floor((7 - unique_guesses.length) / 2)
-      console.log(unique_guesses)
       for (let i = 0; i < guesses_padding; i++) {
         unique_guesses.push(null)
         unique_guesses.unshift(null)
@@ -88,9 +88,11 @@ io.on("connection", (socket) => {
       if (unique_guesses.length < 7) {
         unique_guesses.splice(3, 0, null)
       }
+      unique_guesses.unshift(0) // To add bucket for less than smallest
       console.log(unique_guesses)
-      for (let i = 0; i < 7; i++) {
+      for (let i = 0; i < 8; i++) {
         let bucket = {
+          payout: payouts[i],
           guessers: [],
           value: unique_guesses[i],
           bids: {},

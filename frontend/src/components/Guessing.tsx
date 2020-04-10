@@ -33,7 +33,8 @@ function GuessingUnconnected({
 
   return (
     <>
-      <div className="d-flex flex-row mt-4 justify-content-center align-items-center guess">
+      <div className="h5 text-center mt-3">Make Your Guess</div>
+      <div className="d-flex flex-row mt-1 justify-content-center align-items-center guess">
         <input
           type="number"
           min={0}

@@ -36,7 +36,6 @@ export function PlayersListUnconnected({
     })
 
     socket?.on("camUrl", (camUrl: string) => {
-      console.log(camUrl)
       dispatch(updateCamUrl(camUrl))
     })
   }, [currentPlayer, dispatch, setPlayers, socket])

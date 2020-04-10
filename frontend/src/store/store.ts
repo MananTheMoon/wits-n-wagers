@@ -28,6 +28,8 @@ export interface IGameData {
   }
   buckets: {
     [key: number]: {
+      payout: number
+      value: number
       guessers: string[]
       bids: {
         [key: string]: number

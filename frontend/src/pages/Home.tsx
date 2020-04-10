@@ -7,6 +7,7 @@ import { Question } from "../components/Question"
 import { Join } from "../components/Join"
 import { GameState } from "../store/gameState"
 import { Guessing } from "../components/Guessing"
+import { Bidding } from "../components/Bidding"
 
 interface IHomeProps {
   gameData: IGameData
@@ -20,6 +21,7 @@ export function HomeUnconnected({ gameData }: IHomeProps) {
       <hr />
       {gameData.question && <Question />}
       {gameData.gameState === GameState.Guessing && <Guessing />}
+      {gameData.gameState === GameState.Bidding && <Bidding />}
       <hr />
       <PlayersList />
     </section>
@@ -29,12 +31,5 @@ export function HomeUnconnected({ gameData }: IHomeProps) {
 const mapStateToProps = (state: IState) => ({
   gameData: state.gameData,
 })
-
-const mapDispatchToProps = (dispatch: Dispatch) => {
-  return {
-    addPlayer: setCurrentPlayerAsync(dispatch),
-    removePlayer: removePlayerAsync(dispatch),
-  }
-}
 
 export const Home = connect(mapStateToProps)(HomeUnconnected)

@@ -27,7 +27,6 @@ export function AdminUnconnected({
   setCamUrl,
   setQuestion,
 }: IAdminProps) {
-  console.log("rerender")
   const [urlInput, setUrlInput] = React.useState(camUrl)
   const [questionInput, setQuestionInput] = React.useState(gameData.question)
   React.useEffect(() => {
