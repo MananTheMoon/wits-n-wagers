@@ -1,6 +1,7 @@
 import { Dispatch } from "./store"
 import { setCurrentPlayer, removePlayer, setPlayers } from "./actions"
 import { GameState } from "./gameState"
+import { IBids } from "../components/Bidding"
 
 export const setCurrentPlayerAsync = (dispatch: Dispatch) => async (
   name: string,
@@ -51,4 +52,12 @@ export const setGuessAsync = (dispatch: Dispatch) => async (
   socket: SocketIOClient.Socket
 ) => {
   socket.emit("setGuess", { [player]: guess })
+}
+
+export const setBidsAsync = (dispatch: Dispatch) => async (
+  player: string,
+  bids: IBids,
+  socket: SocketIOClient.Socket
+) => {
+  socket.emit("setBids", player, bids)
 }

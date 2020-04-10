@@ -1,9 +1,10 @@
 import React from "react"
-import { IGameData, IState } from "../store/store"
+import { IGameData, IState, Dispatch } from "../store/store"
 import { connect } from "react-redux"
 import { PlayerState } from "../store/gameState"
 import { numberWithCommas } from "../utils/formatNumber"
 import "./Bidding.css"
+import { setBidsAsync } from "../store/thunks"
 
 interface IBidSpot {
   bucket: {
@@ -93,22 +94,29 @@ interface IBiddingProps {
   gameData: IGameData
   playerState: PlayerState
   currentPlayer: string
+  setMyBids: (
+    player: string,
+    bids: IBids,
+    socket: SocketIOClient.Socket
+  ) => void
 }
 
 // myBids = {bucket: 400, other_bucket_index: 50}
 
-interface IBids {
+export interface IBids {
   [key: string]: number
 }
+
 function BiddingUnconnected({
   socket,
   gameData,
   playerState,
   currentPlayer,
+  setMyBids,
 }: IBiddingProps) {
   const [bids, setBids] = React.useState<IBids>({})
   React.useEffect(() => {
-    console.log(bids)
+    socket && setMyBids(currentPlayer, bids, socket)
   }, [bids])
   if (playerState !== PlayerState.Connected || !currentPlayer) {
     return <div className="mt-2 text-center">You must join to participate</div>
@@ -128,7 +136,6 @@ function BiddingUnconnected({
           <BidSpot
             bucket={bucket}
             key={i}
-            // checked={Object.keys(bids).includes(String(i))}
             currentBid={bids[String(i)]}
             onToggleCheck={(checked) => {
               if (checked && Object.keys(bids).length < 2) {
@@ -164,4 +171,13 @@ const mapStateToProps = (state: IState) => ({
   currentPlayer: state.currentPlayer,
 })
 
-export const Bidding = connect(mapStateToProps)(BiddingUnconnected)
+const mapDispatchToProps = (dispatch: Dispatch) => {
+  return {
+    setMyBids: setBidsAsync(dispatch),
+  }
+}
+
+export const Bidding = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(BiddingUnconnected)

@@ -126,6 +126,19 @@ io.on("connection", (socket) => {
     sendGameData()
   })
 
+  socket.on("setBids", (player, bids) => {
+    Object.keys(gameData.buckets).forEach((key) => {
+      bid = bids[key]
+      if (bid) {
+        gameData.buckets[key].bids = {
+          ...gameData.buckets[key].bids,
+          [player]: bid,
+        }
+      }
+    })
+    sendGameData()
+  })
+
   interval = setInterval(() => sendGameData(socket), 10000)
   socket.on("disconnect", () => {
     console.log("Client disconnected")
