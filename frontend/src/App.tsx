@@ -11,6 +11,7 @@ import { Home } from "./pages/Home"
 import { Admin } from "./pages/Admin"
 import { Bucket } from "./pages/Bucket"
 import { Money } from "./pages/Money"
+import { QuestionPage } from "./pages/QuestionPage"
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
         <Route exact path="/admin" component={Admin} />
         <Route exact path="/bucket/:index" component={Bucket} />
         <Route exact path="/money" component={Money} />
+        <Route exact path="/question" component={QuestionPage} />
       </Switch>
     </Provider>
   )

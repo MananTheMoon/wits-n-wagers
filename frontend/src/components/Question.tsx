@@ -4,7 +4,7 @@ import { IState } from "../store/store"
 import "./Question.css"
 
 interface IQuestionProps {
-  camUrl: string
+  camUrl?: string
   question: string
 }
 
