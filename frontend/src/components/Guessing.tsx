@@ -56,6 +56,7 @@ function GuessingUnconnected({
         />
         <button
           className="btn btn-primary"
+          disabled={input.length < 1}
           onClick={() => {
             socket &&
               setGuess(currentPlayer, numberWithoutCommas(input), socket)
